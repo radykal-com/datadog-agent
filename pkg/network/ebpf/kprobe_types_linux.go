@@ -52,6 +52,10 @@ type Telemetry struct {
 	Udp_sends_missed           uint64
 	Conn_stats_max_entries_hit uint64
 }
+type ClassifierTelemetry struct {
+	Tail_call_failed    uint64
+	Tls_flow_classified uint64
+}
 type PortBinding struct {
 	Netns     uint32
 	Port      uint16
@@ -101,11 +105,13 @@ type ConnTag = uint64
 const (
 	GnuTLS  ConnTag = 0x1
 	OpenSSL ConnTag = 0x2
+	TLS     ConnTag = 0x4
 )
 
 var (
 	StaticTags = map[ConnTag]string{
 		GnuTLS:  "tls.library:gnutls",
 		OpenSSL: "tls.library:openssl",
+		TLS:     "tls.encrypted:true",
 	}
 )

@@ -75,7 +75,7 @@ func modelConnections(conns *network.Connections) *model.Connections {
 	tagsSet := network.NewTagsSet()
 
 	for i, conn := range conns.Conns {
-		httpKey := httpKeyFromConn(conn)
+		httpKey := network.HTTPKeyFromConn(conn)
 		httpAggregations := httpIndex[httpKey]
 		if httpAggregations != nil {
 			httpMatches[httpKey] = struct{}{}

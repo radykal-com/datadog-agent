@@ -1,8 +1,7 @@
 #ifndef __TAGS_H
 #define __TAGS_H
 
-#include "tracer.h"
-#include "tracer-stats.h"
+#include "tracer-conn-stats.h"
 #include "tags-types.h"
 
 // Static tags

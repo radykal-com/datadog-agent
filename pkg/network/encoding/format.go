@@ -180,6 +180,7 @@ func FormatHTTPStats(httpData map[http.Key]http.RequestStats) (map[http.Key]*mod
 	return aggregationsByKey, tagsByKey
 }
 
+<<<<<<< HEAD
 // Build the key for the http map based on whether the local or remote side is http.
 func httpKeyFromConn(c network.ConnectionStats) http.Key {
 	// Retrieve translated addresses
@@ -198,6 +199,8 @@ func httpKeyFromConn(c network.ConnectionStats) http.Key {
 	return http.NewKey(raddr, laddr, rport, lport, "", http.MethodUnknown)
 }
 
+=======
+>>>>>>> ab96d571fe4a ([network/TLS] add TLS support)
 func returnToPool(c *model.Connections) {
 	if c.Conns != nil {
 		for _, c := range c.Conns {

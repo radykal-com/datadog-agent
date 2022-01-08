@@ -1608,7 +1608,7 @@ func testHTTPSLibrary(t *testing.T, fetchCmd []string) {
 	cfg.EnableHTTPSMonitoring = true
 	tr, err := NewTracer(cfg)
 	require.NoError(t, err)
-	defer tr.Stop()
+	defer func() { tr.Stop(); time.Sleep(2 * time.Second) }()
 
 	// Run fetchCmd once to make sure the OpenSSL is detected and uprobes are attached
 	exec.Command(fetchCmd[0]).Run()
@@ -1624,6 +1624,7 @@ func testHTTPSLibrary(t *testing.T, fetchCmd []string) {
 	require.NoErrorf(t, err, "failed to issue request via %s: %s", fetchCmd, err)
 
 	var allConns []network.ConnectionStats
+	allHTTP := make(map[http.Key]http.RequestStats)
 	require.Eventuallyf(t, func() bool {
 		payload, err := tr.GetActiveConnections("1")
 		if err != nil {
@@ -1632,6 +1633,9 @@ func testHTTPSLibrary(t *testing.T, fetchCmd []string) {
 
 		allConns = append(allConns, payload.Conns...)
 		for key, stats := range payload.HTTP {
+			allHTTP[key] = stats
+		}
+		for key, stats := range allHTTP {
 			statsTags := stats[(200/100)-1].Tags
 			// debian 10 have curl binary linked with openssl and gnutls but use only openssl during tls query (there no runtime flag available)
 			// this make harder to map lib and tags, one set of tag should match but not both

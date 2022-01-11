@@ -12,7 +12,9 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
+	seclog "github.com/DataDog/datadog-agent/pkg/security/log"
 	sprobe "github.com/DataDog/datadog-agent/pkg/security/probe"
+	"github.com/DataDog/datadog-agent/pkg/security/secl/model"
 	"github.com/DataDog/datadog-agent/pkg/security/secl/rules"
 )
 
@@ -40,6 +42,9 @@ func TestPTraceEvent(t *testing.T) {
 	}
 
 	t.Run("test_ptrace", func(t *testing.T) {
+		tags := seclog.AddTags(model.PTraceEventType.String())
+		defer seclog.SetTags(tags...)
+
 		test.WaitSignal(t, func() error {
 			return runSyscallTesterFunc(t, syscallTester, "ptrace-traceme")
 		}, func(event *sprobe.Event, r *rules.Rule) {

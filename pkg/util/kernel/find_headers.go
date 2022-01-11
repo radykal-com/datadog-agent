@@ -21,6 +21,7 @@ import (
 	"path/filepath"
 	"regexp"
 	"strconv"
+	"strings"
 
 	"github.com/DataDog/datadog-agent/pkg/metadata/host"
 	"github.com/DataDog/datadog-agent/pkg/util/log"
@@ -212,6 +213,13 @@ func getDefaultHeaderDirs() []string {
 		fmt.Sprintf(cosKernelModulesPath, hi.KernelVersion),
 		fedoraKernelModulesPath,
 	}
+
+	const defaultSuffix = "-default"
+	if strings.HasSuffix(hi.KernelVersion, defaultSuffix) {
+		cleanedKernelVersion := strings.TrimSuffix(hi.KernelVersion, defaultSuffix)
+		dirs = append(dirs, fmt.Sprintf(rpmKernelModulePath, cleanedKernelVersion))
+	}
+
 	return dirs
 }
 

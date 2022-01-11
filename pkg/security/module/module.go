@@ -20,6 +20,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/cihub/seelog"
 	"github.com/hashicorp/go-multierror"
 	"github.com/pkg/errors"
 	"google.golang.org/grpc"
@@ -370,7 +371,12 @@ func (m *Module) EventDiscarderFound(rs *rules.RuleSet, event eval.Event, field 
 // HandleEvent is called by the probe when an event arrives from the kernel
 func (m *Module) HandleEvent(event *sprobe.Event) {
 	if ruleSet := m.GetRuleSet(); ruleSet != nil {
-		ruleSet.Evaluate(event)
+		result := ruleSet.Evaluate(event)
+
+		if logLevel, err := log.GetLogLevel(); err != nil || logLevel == seelog.TraceLvl {
+			prettyEvent := event.String()
+			seclog.TraceTagf(event.GetEventType(), "Evaluating event %s => %v", prettyEvent, result)
+		}
 	}
 }
 

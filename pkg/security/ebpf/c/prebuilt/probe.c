@@ -45,7 +45,6 @@
 #include "mount.h"
 #include "umount.h"
 #include "link.h"
-#include "procfs.h"
 #include "setxattr.h"
 #include "erpc.h"
 #include "ioctl.h"
@@ -60,6 +59,7 @@
 #include "dns.h"
 #include "tc.h"
 #include "net_device.h"
+#include "procfs.h"
 
 struct invalidate_dentry_event_t {
     struct kevent_t event;
